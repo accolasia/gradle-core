@@ -4,16 +4,17 @@ buildscript {
 	}
 	dependencies {
 		classpath 'com.github.townsfolk:gradle-release:1.2'
-		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
 	}
 }
 
+plugins {
+    id "com.jfrog.bintray" version "1.7"
+}
 
 apply plugin: 'release'
 apply plugin: "com.bancvue.core-oss"
 apply plugin: "com.bancvue.integration-test"
 apply plugin: "com.bancvue.maven-publish-ext"
-apply plugin: 'com.jfrog.bintray'
 
 repositories {
 	jcenter()
@@ -70,26 +71,18 @@ publishing_ext {
 }
 
 bintray {
-	user = 'bancvue'
-	key = '-changeme-'
+	user = project.hasProperty("bintray.user") ? project.getProperty("bintray.user") : ""
+	key = project.hasProperty("bintray.key") ? project.getProperty("bintray.key") : ""
 
 	publications = ['gradleCore', 'gradleCoreTest']
-	dryRun = false
-	publish = false
 	pkg {
 		repo = 'maven'
-		userOrg = 'bancvue'
+		userOrg = 'openmastery'
 		name = project.group + ':' + project.ext['artifactId']
 		desc = project.description
-		websiteUrl = 'https://github.com/BancVue/gradle-core'
-		issueTrackerUrl = 'https://github.com/BancVue/gradle-core/issues'
-		vcsUrl = 'https://github.com/BancVue/gradle-core.git'
+		websiteUrl = 'https://github.com/openmastery/gradle-core'
+		issueTrackerUrl = 'https://github.com/openmastery/gradle-core/issues'
+		vcsUrl = 'https://github.com/openmastery/gradle-core.git'
 		licenses = ['Apache-2.0']
-		labels = ['gradle']
-		publicDownloadNumbers = true
-		version {
-			vcsTag = project.version
-			attributes = ['gradle-plugin': 'com.bancvue.core-oss:com.bancvue:gradle-core']
-		}
 	}
 }
