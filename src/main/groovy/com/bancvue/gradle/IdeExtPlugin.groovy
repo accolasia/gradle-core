@@ -98,6 +98,7 @@ class IdeExtPlugin implements Plugin<Project> {
 				sourceDirs += info.sourceDirs
 				testSourceDirs += info.testSourceDirs
 				scopes.COMPILE.plus += info.compileConfigurations
+				scopes.PROVIDED.plus += info.compileOnlyConfigurations
 				scopes.RUNTIME.plus += info.runtimeConfigurations - info.compileConfigurations
 				scopes.TEST.plus += info.testRuntimeConfigurations - info.runtimeConfigurations
 
@@ -152,7 +153,9 @@ class IdeExtPlugin implements Plugin<Project> {
 
 		project.eclipse {
 			classpath {
-				plusConfigurations += info.getRuntimeConfigurations() + info.getTestRuntimeConfigurations()
+				plusConfigurations += info.getCompileOnlyConfigurations() +
+						info.getRuntimeConfigurations() +
+						info.getTestRuntimeConfigurations()
 			}
 		}
 	}
@@ -163,6 +166,7 @@ class IdeExtPlugin implements Plugin<Project> {
 		Set<File> sourceDirs
 		Set<File> testSourceDirs
 		Set<Configuration> compileConfigurations
+		Set<Configuration> compileOnlyConfigurations
 		Set<Configuration> runtimeConfigurations
 		Set<Configuration> testRuntimeConfigurations
 
@@ -180,6 +184,7 @@ class IdeExtPlugin implements Plugin<Project> {
 			}
 
 			compileConfigurations = findConfigurationsMatching(project, /(?i).*(?<!test)compile$/)
+			compileOnlyConfigurations = findConfigurationsMatching(project, /(?i).*(?<!test)compileonly/)
 			runtimeConfigurations = findConfigurationsMatching(project, /(?i).*(?<!test)runtime$/)
 			testRuntimeConfigurations = findConfigurationsMatching(project, /(?i).*testruntime$/)
 		}
